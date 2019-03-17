@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+
+	<script src="jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="loading-bar.css"/> <script type="text/javascript" src="loading-bar.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script  src="https://code.jquery.com/jquery-1.9.1.js"
+	integrity="sha256-e9gNBsAcA0DBuRWbm0oZfbiCyhjLrI6bmqAl5o+ZjUA="
+	crossorigin="anonymous"></script>
+	<style type="text/css">
+	progress {
+		background-color: #ffb700;
+		border: 0;
+		height: 18px;
+		border-radius: 9px;
+	}
+</style>
+
+
+</head>
+<body>
+	<center>
+		<div class="col-md-12">
+			Her tıklamada yüzde kaç artsın?<br>
+			<input type="text" id="setPercent"><br>
+			Kaç katılımcı olacak?<br>
+			<input type="text" id="numberofPart"><br>
+			<button class="btn btn-success" id="clickMe">EKLE</button>
+			<br>
+			<br>
+			<ul id="addProgress">
+			</ul>
+			<br>
+			<button class='btn btn-success button' id="disabledButton">YARIŞTIR!</button>
+			<br>
+		</div>
+	</center>
+</body>
+<!--Progressbar ekleme-->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#clickMe').click(function() {	
+			var x=$('#numberofPart').val();
+			for (var i = 1; i <=parseInt(x); i++) {
+				$('#addProgress').append($('<br><label>Katılımcı Numarası : '+i+' ==></label><progress id="'+i+'" value="0" max="100"></progress><br>'));	
+			}
+		});
+		$(".button").click(function () {
+			var increPro=Math.floor(Math.random() * parseInt($('#numberofPart').val()))+1;
+			var toStringed = increPro.toString();
+			var diff=$('#setPercent').val();
+			animateProgress(parseInt(diff.trim()),toStringed);
+		});
+
+	})
+	var myVar;
+	function animateProgress(diff,toStringed) {
+		var currValue = $("#"+toStringed).val();
+		var toValue = currValue + diff;
+		toValue = toValue < 0 ? 0 : toValue;
+		toValue = toValue > 100 ? 100 : toValue;
+		$("#"+toStringed).animate({'value': toValue}, 500);
+		myVar = setInterval(alertFunc, 500,toValue,toStringed);
+		function alertFunc(toValue,toStringed) {
+			if(toValue==100){
+				Swal.fire({
+					title: 'TEBRİKLER!',
+					text: toStringed +'.KATILIMCI KAZANDI!',
+					imageUrl: 'https://previews.123rf.com/images/aliasching/aliasching1411/aliasching141100033/33389018-congratulations-typography-lettering-decorative-text-card-design.jpg',
+					imageWidth: 400,
+					imageHeight: 200,
+					animation: true
+				}).then(function(result) { 
+					location.reload(true);
+					$('#setPercent').val(empty);
+					$('#numberofPart').val(empty);
+
+				});
+
+				clearInterval(myVar);
+				$('#disabledButton').attr("disabled", true);
+			}
+		}
+	}
+</script>
+</html>
